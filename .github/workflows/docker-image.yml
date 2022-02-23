@@ -1,0 +1,52 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Dockerfile'
+      - '**'
+      - '!*'
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and export
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        load: true
+        tags: ${{ github.repository }}:test
+
+    - name: Start image
+      run: |
+        docker run --rm --privileged --detach --name test-image \
+          --volume $GITHUB_WORKSPACE/bin/wait-for-dockerd.sh:/usr/local/bin/wait-for-dockerd.sh \
+          $GITHUB_REPOSITORY:test
+
+    - name: Wait for dockerd to start
+      run: docker exec --tty test-image wait-for-dockerd.sh
+
+    - name: Test docker in docker
+      run: docker exec --tty test-image docker info
+
+    - name: Push image to DockerHub
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        platforms: linux/amd64
+        push: true
+        tags: ${{ github.repository }}:latest
