@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  build:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,17 +31,8 @@ jobs:
         load: true
         tags: ${{ github.repository }}:test
 
-    - name: Start image
-      run: |
-        docker run --rm --privileged --detach --name test-image \
-          --volume $GITHUB_WORKSPACE/bin/wait-for-dockerd.sh:/usr/local/bin/wait-for-dockerd.sh \
-          $GITHUB_REPOSITORY:test
-
-    - name: Wait for dockerd to start
-      run: docker exec --tty test-image wait-for-dockerd.sh
-
-    - name: Test docker in docker
-      run: docker exec --tty test-image docker info
+    - name: Test image
+      run: docker run --rm --tty $GITHUB_REPOSITORY:test ansible --version
 
     - name: Push image to DockerHub
       uses: docker/build-push-action@v2
