@@ -10,5 +10,7 @@ RUN python3 -m pip --no-cache-dir install --upgrade pip wheel; \
     python3 -m pip --no-cache-dir install ansible-core
 
 # Install ansible collections
-RUN ansible-galaxy collection install --no-cache \
-        ansible.posix ansible.utils community.general
+RUN ansible-galaxy collection install \
+        ansible.posix \
+        ansible.utils \
+        community.general
