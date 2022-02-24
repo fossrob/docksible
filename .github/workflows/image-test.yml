@@ -2,7 +2,8 @@ name: Docker Image Test
 
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
     paths:
       - 'Dockerfile'
       - '**'
@@ -11,7 +12,7 @@ on:
 
 jobs:
 
-  test:
+  docker_image_test:
     runs-on: ubuntu-latest
 
     steps:

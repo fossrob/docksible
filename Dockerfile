@@ -9,6 +9,6 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y sshpass; \
 RUN python3 -m pip --no-cache-dir install --upgrade pip wheel; \
     python3 -m pip --no-cache-dir install ansible-core
 
-# # Install ansible collections
-# RUN ansible-galaxy collection install --no-cache --collections-path /usr/share/ansible/collections \
-#     ansible.posix ansible.utils community.general
+# Install ansible collections
+RUN ansible-galaxy collection install \
+        community.general
