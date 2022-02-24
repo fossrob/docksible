@@ -12,7 +12,7 @@ on:
 
 jobs:
 
-  test:
+  docker_image_test:
     runs-on: ubuntu-latest
 
     steps:
