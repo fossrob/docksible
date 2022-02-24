@@ -11,6 +11,4 @@ RUN python3 -m pip --no-cache-dir install --upgrade pip wheel; \
 
 # Install ansible collections
 RUN ansible-galaxy collection install \
-        ansible.posix \
-        ansible.utils \
         community.general
